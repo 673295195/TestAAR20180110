@@ -6,15 +6,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,6 +39,7 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.Circle;
 import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
@@ -56,21 +54,18 @@ import com.mgc.ar_department.lbs2Dredpacket.bean.SellerFragmentBean;
 import com.mgc.ar_department.lbs2Dredpacket.bean.SellerPacketBean;
 import com.mgc.ar_department.lbs2Dredpacket.util.Constants;
 import com.mgc.ar_department.lbs2Dredpacket.util.LogUtils;
-import com.mgc.ar_department.lbs2Dredpacket.util.MyYAnimation;
 import com.mgc.ar_department.lbs2Dredpacket.util.OkHttpUtil;
-import com.mgc.ar_department.lbs2Dredpacket.util.PermissionUtils;
+import com.mgc.ar_department.lbs2Dredpacket.util.PermissionAndNetUtils;
 
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 
 import static com.amap.test2Dlibrary.R.id.map;
 
 
 public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLocationChangeListener,
-        AMap.OnMarkerClickListener, AMap.OnMapClickListener, AMap.OnMapLongClickListener {
+        AMap.OnMarkerClickListener, AMap.OnMapClickListener, AMap.OnMapLongClickListener ,AMap.OnMapLoadedListener{
 
     private MapView mMapView;
     private AMap aMap;
@@ -118,31 +113,30 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
     // 打开相机请求Code，多个权限请求Code
     private final int REQUEST_CODE_PERMISSIONS=2;
+    private double mLatBuy;
+    private double mLonbuy;
+    //private ArrayList<BuyerPacketBean> buyerPacketArrayList;
     //private CameraPosition cameraOption=new CameraPosition.Builder().target(mLatLng).zoom(17.5f).tilt(0).bearing(30).build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStatueBar();
-
         setContentView(R.layout.location_activity_main);
         mContext = this;
-
-        //requestMorePermissions();
         requestMorePermissions1();
         initView();
         mMapView.onCreate(savedInstanceState);
         bundle = new Bundle();
         //初始化地图
         init();
-        //sHA1(this);
-
+        //SHA1AndPackageNameUtils.sHA1(mContext);
     }
 
     // 普通申请多个权限
     private void requestMorePermissions(){
-        PermissionUtils.checkAndRequestMorePermissions(mContext, PERMISSIONS, REQUEST_CODE_PERMISSIONS,
-                new PermissionUtils.PermissionRequestSuccessCallBack() {
+        PermissionAndNetUtils.checkAndRequestMorePermissions(mContext, PERMISSIONS, REQUEST_CODE_PERMISSIONS,
+                new PermissionAndNetUtils.PermissionRequestSuccessCallBack() {
                     @Override
                     public void onHasPermission() {
                         // 权限已被授予
@@ -153,7 +147,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
     // 自定义申请多个权限
     private void requestMorePermissions1(){
-        PermissionUtils.checkMorePermissions(mContext, PERMISSIONS, new PermissionUtils.PermissionCheckCallBack() {
+        PermissionAndNetUtils.checkMorePermissions(mContext, PERMISSIONS, new PermissionAndNetUtils.PermissionCheckCallBack() {
             @Override
             public void onHasPermission() {
                 //toCamera();
@@ -164,14 +158,14 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
                 showExplainDialog(permission, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PermissionUtils.requestMorePermissions(mContext, PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+                        PermissionAndNetUtils.requestMorePermissions(mContext, PERMISSIONS, REQUEST_CODE_PERMISSIONS);
                     }
                 });
             }
 
             @Override
             public void onUserHasAlreadyTurnedDownAndDontAsk(String... permission) {
-                PermissionUtils.requestMorePermissions(mContext, PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+                PermissionAndNetUtils.requestMorePermissions(mContext, PERMISSIONS, REQUEST_CODE_PERMISSIONS);
             }
         });
     }
@@ -197,7 +191,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
                 .setPositiveButton("前往", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PermissionUtils.toAppSetting(mContext);
+                        PermissionAndNetUtils.toAppSetting(mContext);
                     }
                 })
                 .setNegativeButton("取消", null).show();
@@ -207,7 +201,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_PERMISSIONS:
-                PermissionUtils.onRequestMorePermissionsResult(mContext, PERMISSIONS, new PermissionUtils.PermissionCheckCallBack() {
+                PermissionAndNetUtils.onRequestMorePermissionsResult(mContext, PERMISSIONS, new PermissionAndNetUtils.PermissionCheckCallBack() {
                     @Override
                     public void onHasPermission() {
                         //toCamera();
@@ -266,34 +260,6 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         mMenu = (RelativeLayout) findViewById(R.id.menu);
 
     }
-
-    public static String sHA1(Context context) {
-        try {
-            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-            String packageName = context.getPackageName();
-            LogUtils.error("包名" + packageName);
-            byte[] cert = info.signatures[0].toByteArray();
-            MessageDigest md = MessageDigest.getInstance("SHA1");
-            byte[] publicKey = md.digest(cert);
-            StringBuffer hexString = new StringBuffer();
-            for (int i = 0; i < publicKey.length; i++) {
-                String appendString = Integer.toHexString(0xFF & publicKey[i])
-                        .toUpperCase(Locale.US);
-                if (appendString.length() == 1)
-                    hexString.append("0");
-                hexString.append(appendString);
-                hexString.append(":");
-            }
-            String result = hexString.toString();
-            LogUtils.error("sHA1= " + result);
-            return result.substring(0, result.length() - 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            return null;
-        }
-    }
-
     private void addRedPacket() {
         // for循环添加marker
         mHashMap = new HashMap<String, Integer>();
@@ -316,6 +282,25 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
             marker2 = aMap.addMarker(markerOption);
 
         }
+        //List<BuyerBean.BuyerPacketBean> buyerPacketBeanList = mBuyerBean.getBuyerPacketBeanList();
+        /*if (buyerPacketBeanList.size()!=0){
+            for (int i = 0; i < buyerPacketBeanList.size(); i++) {
+                int idBuy = mSellerBean.get(i).getId();
+                mLatBuy = buyerPacketBeanList.get(i).getLatitude();
+                mLonbuy = buyerPacketBeanList.get(i).getLongitude();
+                String name = mBuyerBean.getV_name();
+                mHashMap.put(name, idBuy);
+                list.add(name);
+                String n_envelope = mSellerBean.get(i).getN_notopen();
+               *//* markerOption.position(new LatLng(mLat1, mLon1));
+                markerOption.title(name).snippet("剩" + n_envelope + "个可抢红包");*//*
+
+                markerOption.draggable(true);
+                markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_packet));
+                marker2 = aMap.addMarker(markerOption);
+
+            }
+        }*/
         //添加地图上红包的点击事件
         aMap.setOnMarkerClickListener(this);
 
@@ -362,6 +347,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
         //设置SDK 自带定位消息监听
         aMap.setOnMyLocationChangeListener(this);
+        //aMap.setOnMapLoadedListener(this);
         loadNetData();
     }
 
@@ -388,6 +374,15 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
   /*      mSM = (SensorManager) getSystemService(SENSOR_SERVICE);
         mSensor = mSM.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mSM.registerListener((SensorEventListener) myListener, mSensor, SensorManager.SENSOR_DELAY_UI);//注册回调函数*/
+    }
+    @Override
+    public void onMapLoaded() {
+        //设置地图中心点为屏幕的1/2和3/4位置
+        aMap.setPointToCenter(mMapView.getWidth()/2, mMapView.getHeight()/4*3);
+        aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(new LatLng(mJing,mWei), 18, 60, 0)));
+        //添加Marker
+        /*Marker marker = aMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
+        marker.setPositionByPixels(mMapView.getWidth()/2, mMapView.getHeight()/4*3);*/
     }
 
     /**
@@ -433,6 +428,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     @Override
     public void onMyLocationChange(Location location) {  //位置改变是调用
         mLocation = location;
+        location.setTime(3000);
         //LogUtils.error("onMyLocationChange: wei:" + mWei + "+++" + mJing);
         // 定位回调监听
         if (location != null) {
@@ -531,8 +527,9 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
             builder.setOpenButton("", new DialogInterface.OnClickListener() {
                 public void onClick(final DialogInterface dialog, int which) {
                     //判断网络是否有链接
-                    ConnectivityManager connect = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo activeNetworkInfo = connect.getActiveNetworkInfo();
+                  /*  ConnectivityManager connect = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo activeNetworkInfo = connect.getActiveNetworkInfo();*/
+                    NetworkInfo activeNetworkInfo = PermissionAndNetUtils.getActiveNetworkInfo(mContext);
                     if (activeNetworkInfo != null) {
                         //网络请求,获取红包金额
                         mOkHttpUtil.getPacketMoney(id, mSellerBean.get(i).getN_redstate());
@@ -758,6 +755,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         }
     }
 
+
     public void historyRecord(View view) {
         if (click) {
             translationDown();
@@ -775,8 +773,9 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     public void refresh(View view) {  //刷新地图
         mLinBar.setVisibility(View.GONE);
         click = !click;
-        ConnectivityManager connect = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connect.getActiveNetworkInfo();
+      /*  ConnectivityManager connect = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connect.getActiveNetworkInfo();*/
+        NetworkInfo activeNetworkInfo = PermissionAndNetUtils.getActiveNetworkInfo(mContext);
         if (activeNetworkInfo != null) {
             aMap.clear();
             setUpMap();
@@ -796,8 +795,9 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     public void redRecord(View view) {  //查看记录
         mLinBar.setVisibility(View.GONE);
         click = !click;
-        ConnectivityManager connect = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connect.getActiveNetworkInfo();
+     /*   ConnectivityManager connect = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connect.getActiveNetworkInfo();*/
+        NetworkInfo activeNetworkInfo = PermissionAndNetUtils.getActiveNetworkInfo(mContext);
         if (activeNetworkInfo != null) {
             Intent intent = new Intent(LocationAndPacket.this, MyRedPacketRecord.class);
             startActivity(intent);
@@ -821,9 +821,17 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     }
 
     public void sendPacket(View view) {
-        Intent intent=new Intent(mContext,SendPacket.class);
+        Intent intent=new Intent(mContext,SendPacketActivity.class);
+        intent.putExtra("jing",mJing);
+        intent.putExtra("wei",mWei);
+        bundle.putSerializable("mBuyerBean", mBuyerBean);  //消费者信息
+        intent.putExtras(bundle);
+        //intent.put
         startActivity(intent);
     }
+
+
+
 }
 
 
