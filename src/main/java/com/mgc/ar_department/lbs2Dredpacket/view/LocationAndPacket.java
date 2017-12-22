@@ -39,7 +39,6 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.Circle;
 import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
@@ -65,15 +64,15 @@ import static com.amap.test2Dlibrary.R.id.map;
 
 
 public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLocationChangeListener,
-        AMap.OnMarkerClickListener, AMap.OnMapClickListener, AMap.OnMapLongClickListener ,AMap.OnMapLoadedListener{
+        AMap.OnMarkerClickListener, AMap.OnMapClickListener, AMap.OnMapLongClickListener {
 
     private MapView mMapView;
     private AMap aMap;
     private Circle circle;
     private RadioGroup mGPSModeGroup;
     private MyLocationStyle myLocationStyle;
-    private double mWei;
-    private double mJing;
+    private double mWei = 22.947077;
+    private double mJing = 113.890162;
     private Location mLocation;
     private MarkerOptions markerOption;
     private LatLng latlng = new LatLng(mWei, mJing);
@@ -107,16 +106,14 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     private TextView mReturn1;
     private boolean click = true;
     private int mHeight;
-    private int TIME=0;
+    private int TIME = 0;
     private final String[] PERMISSIONS = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE
             , Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE};
 
     // 打开相机请求Code，多个权限请求Code
-    private final int REQUEST_CODE_PERMISSIONS=2;
+    private final int REQUEST_CODE_PERMISSIONS = 2;
     private double mLatBuy;
     private double mLonbuy;
-    //private ArrayList<BuyerPacketBean> buyerPacketArrayList;
-    //private CameraPosition cameraOption=new CameraPosition.Builder().target(mLatLng).zoom(17.5f).tilt(0).bearing(30).build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +121,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         setStatueBar();
         setContentView(R.layout.location_activity_main);
         mContext = this;
-        requestMorePermissions1();
+        requestMorePermissions1(); //6.0权限
         initView();
         mMapView.onCreate(savedInstanceState);
         bundle = new Bundle();
@@ -133,20 +130,8 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         //SHA1AndPackageNameUtils.sHA1(mContext);
     }
 
-    // 普通申请多个权限
-    private void requestMorePermissions(){
-        PermissionAndNetUtils.checkAndRequestMorePermissions(mContext, PERMISSIONS, REQUEST_CODE_PERMISSIONS,
-                new PermissionAndNetUtils.PermissionRequestSuccessCallBack() {
-                    @Override
-                    public void onHasPermission() {
-                        // 权限已被授予
-                        //toCamera();
-                    }
-                });
-    }
-
     // 自定义申请多个权限
-    private void requestMorePermissions1(){
+    private void requestMorePermissions1() {
         PermissionAndNetUtils.checkMorePermissions(mContext, PERMISSIONS, new PermissionAndNetUtils.PermissionCheckCallBack() {
             @Override
             public void onHasPermission() {
@@ -169,20 +154,20 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
             }
         });
     }
+
     /**
      * 解释权限的dialog
-     *
      */
     private void showExplainDialog(String[] permission, DialogInterface.OnClickListener onClickListener) {
         new AlertDialog.Builder(mContext)
                 .setTitle("申请权限")
-                .setMessage("我们需要" + Arrays.toString(permission)+"权限")
+                .setMessage("我们需要" + Arrays.toString(permission) + "权限")
                 .setPositiveButton("确定", onClickListener)
                 .show();
     }
+
     /**
      * 显示前往应用设置Dialog
-     *
      */
     private void showToAppSettingDialog() {
         new AlertDialog.Builder(mContext)
@@ -209,12 +194,12 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
                     @Override
                     public void onUserHasAlreadyTurnedDown(String... permission) {
-                        Toast.makeText(mContext, "我们需要"+Arrays.toString(permission)+"权限", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "我们需要" + Arrays.toString(permission) + "权限", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onUserHasAlreadyTurnedDownAndDontAsk(String... permission) {
-                        Toast.makeText(mContext, "我们需要"+ Arrays.toString(permission)+"权限", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "我们需要" + Arrays.toString(permission) + "权限", Toast.LENGTH_SHORT).show();
                         showToAppSettingDialog();
                     }
                 });
@@ -222,7 +207,8 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
         }
     }
-    private void setStatueBar() {
+
+    private void setStatueBar() {  //toolbar
         Window window = LocationAndPacket.this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -256,10 +242,10 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         mRed_record = (Button) findViewById(R.id.red_record);//红包
         mRefresh = (Button) findViewById(R.id.red_refresh);//刷新
         mLinBar = (LinearLayout) findViewById(R.id.bar_record); //弹出菜单
-        // mHeight = mLinBar.getMeasuredHeight();
         mMenu = (RelativeLayout) findViewById(R.id.menu);
 
     }
+
     private void addRedPacket() {
         // for循环添加marker
         mHashMap = new HashMap<String, Integer>();
@@ -326,8 +312,10 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
         if (aMap == null) {
             aMap = mMapView.getMap();
-
+            // aMap.setMapType(MAP_TYPE_SATELLITE);
             //aMap.setMyLocationRotateAngle(360);
+            // aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+
             UiSettings uiSettings = aMap.getUiSettings();
             //放大缩小图标隐藏
             uiSettings.setScaleControlsEnabled(false);  //比例尺
@@ -335,16 +323,12 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
             //所有手势锁定
             uiSettings.setAllGesturesEnabled(true);  //所有手势
             //uiSettings.setZoomGesturesEnabled(true);  //缩放手势
-           // uiSettings.setScrollGesturesEnabled(true);  //滑动手势
+            // uiSettings.setScrollGesturesEnabled(true);  //滑动手势
             //uiSettings.setRotateGesturesEnabled(true); //旋转手势
-           // circleAndLocation();
+            // circleAndLocation();
             setUpMap();
         }
-        //circleAndLocation();
-        //模式切换
-       /* mGPSModeGroup = (RadioGroup) findViewById(R.id.gps_radio_group);
-        mGPSModeGroup.setOnCheckedChangeListener(this);*/
-
+        circleAndLocation();
         //设置SDK 自带定位消息监听
         aMap.setOnMyLocationChangeListener(this);
         //aMap.setOnMapLoadedListener(this);
@@ -369,20 +353,9 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
         myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色  。
         aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示  设置不显示
-        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        //aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         //myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);
-  /*      mSM = (SensorManager) getSystemService(SENSOR_SERVICE);
-        mSensor = mSM.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mSM.registerListener((SensorEventListener) myListener, mSensor, SensorManager.SENSOR_DELAY_UI);//注册回调函数*/
-    }
-    @Override
-    public void onMapLoaded() {
-        //设置地图中心点为屏幕的1/2和3/4位置
-        aMap.setPointToCenter(mMapView.getWidth()/2, mMapView.getHeight()/4*3);
-        aMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(new LatLng(mJing,mWei), 18, 60, 0)));
-        //添加Marker
-        /*Marker marker = aMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker)));
-        marker.setPositionByPixels(mMapView.getWidth()/2, mMapView.getHeight()/4*3);*/
+
     }
 
     /**
@@ -391,8 +364,9 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LogUtils.error("销毁");
         mMapView.onDestroy();
-       // TIME=0;
+        // TIME=0;
     }
 
     /**
@@ -410,6 +384,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     @Override
     protected void onPause() {
         super.onPause();
+        LogUtils.error("暂停");
         mMapView.onPause();
     }
 
@@ -428,7 +403,9 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     @Override
     public void onMyLocationChange(Location location) {  //位置改变是调用
         mLocation = location;
-        location.setTime(3000);
+        //location.setTime(3000);
+        long time = location.getTime();
+        LogUtils.error("时间" + time);
         //LogUtils.error("onMyLocationChange: wei:" + mWei + "+++" + mJing);
         // 定位回调监听
         if (location != null) {
@@ -439,21 +416,17 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
                 String errorInfo = bundle.getString(MyLocationStyle.ERROR_INFO);
                 // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
                 int locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
-                /*
-                errorCode
-                errorInfo
-                locationType
-                */
+
                 LogUtils.error("定位信息， code: " + errorCode + " errorInfo: " + errorInfo + " locationType: " + locationType);
-                // circleAndLocation();
+                //circleAndLocation();
                 mJing = mLocation.getLongitude();
                 mWei = mLocation.getLatitude();
 
                 //限定周围范围
                 //速度部位0
                 //int TIME=0;
-               // circleAndLocation();
-                if (mLocation.getSpeed()!=0||TIME<=1){
+                //circleAndLocation();
+                if (mLocation.getSpeed() != 0 || TIME <= 1) {
                     TIME++;
                     circleAndLocation();
                 }
@@ -473,8 +446,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         if (circle != null) {
             circle.remove();
         }
-        aMap.moveCamera(CameraUpdateFactory
-                .newLatLngZoom(new LatLng(mWei, mJing), 17.5f));// 设置指定的可视区域地图
+        aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mWei, mJing), 17.5f));// 设置指定的可视区域地图
         circle = aMap.addCircle(new CircleOptions().center(new LatLng(mWei, mJing))
                 .radius(200).strokeColor(Color.RED)
                 .fillColor(Color.argb(40, 20, 20, 20)).strokeWidth(0));
@@ -490,10 +462,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
         double longitude = position.longitude;
         double latitude = position.latitude;
-        LogUtils.error("onMarkerClick: 定位" + mWei + "==" + mJing);
-         /*
-            * marker定位的经纬度
-            * */
+        // marker定位的经纬度
         LatLng latlng3 = new LatLng(latitude, longitude);
         /*当前定位的经纬度*/
         LatLng latlng1 = new LatLng(mWei, mJing);
@@ -789,7 +758,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     //返回上一级
     public void returnLast(View view) {
         finish();
-       // TIME=0;
+        // TIME=0;
     }
 
     public void redRecord(View view) {  //查看记录
@@ -821,16 +790,13 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     }
 
     public void sendPacket(View view) {
-        Intent intent=new Intent(mContext,SendPacketActivity.class);
-        intent.putExtra("jing",mJing);
-        intent.putExtra("wei",mWei);
+        Intent intent = new Intent(LocationAndPacket.this, SendPacketActivity.class);
+        intent.putExtra("jing", mJing);
+        intent.putExtra("wei", mWei);
         bundle.putSerializable("mBuyerBean", mBuyerBean);  //消费者信息
         intent.putExtras(bundle);
-        //intent.put
         startActivity(intent);
     }
-
-
 
 }
 
