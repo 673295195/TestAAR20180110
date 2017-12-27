@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static android.R.attr.defaultValue;
 import static com.amap.test2Dlibrary.R.id.map;
 
 
@@ -71,8 +72,8 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     private Circle circle;
     private RadioGroup mGPSModeGroup;
     private MyLocationStyle myLocationStyle;
-    private double mWei = 22.947077;
-    private double mJing = 113.890162;
+    private double mWei ;
+    private double mJing ;
     private Location mLocation;
     private MarkerOptions markerOption;
     private LatLng latlng = new LatLng(mWei, mJing);
@@ -114,6 +115,8 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     private final int REQUEST_CODE_PERMISSIONS = 2;
     private double mLatBuy;
     private double mLonbuy;
+    private String redNum;
+    private int mUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +124,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         setStatueBar();
         setContentView(R.layout.location_activity_main);
         mContext = this;
+        initIntent();
         requestMorePermissions1(); //6.0权限
         initView();
         mMapView.onCreate(savedInstanceState);
@@ -128,6 +132,13 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         //初始化地图
         init();
         //SHA1AndPackageNameUtils.sHA1(mContext);
+    }
+
+    private void initIntent() {
+        if (getIntent()!=null){
+            mUserId = getIntent().getIntExtra("id", defaultValue);
+            LogUtils.error("是第"+mUserId+"会员");
+        }
     }
 
     // 自定义申请多个权限
@@ -259,9 +270,11 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
             String name = mSellerBean.get(i).getN_shops();
             mHashMap.put(name, id);
             list.add(name);
-            String n_envelope = mSellerBean.get(i).getN_notopen();
+            redNum = mSellerBean.get(i).getN_notopen();
             markerOption.position(new LatLng(mLat1, mLon1));
-            markerOption.title(name).snippet("剩" + n_envelope + "个可抢红包");
+            //markerOptioon.title(name).snippet("剩" + redNum + "个可抢红包");
+            markerOption.title(name).snippet("剩" + redNum + "个可抢红包");
+
 
             markerOption.draggable(true);
             markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_packet));
@@ -338,7 +351,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     // 加载商家bean数据
     private void loadNetData() {
         mOkHttpUtil.getSellerBean();
-        mOkHttpUtil.getBuyerBean();
+        mOkHttpUtil.getBuyerBean(mUserId);
     }
 
     /**
@@ -353,7 +366,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
         myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色  。
         aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示  设置不显示
-        //aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         //myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);
 
     }
@@ -404,10 +417,9 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     public void onMyLocationChange(Location location) {  //位置改变是调用
         mLocation = location;
         //location.setTime(3000);
-        long time = location.getTime();
-        LogUtils.error("时间" + time);
         //LogUtils.error("onMyLocationChange: wei:" + mWei + "+++" + mJing);
         // 定位回调监听
+        aMap.setMyLocationEnabled(false);
         if (location != null) {
             LogUtils.error("onMyLocationChange 定位成功， lat: " + location.getLatitude() + " lon: " + location.getLongitude());
             Bundle bundle = location.getExtras();
@@ -455,6 +467,8 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
 
     @Override
     public boolean onMarkerClick(final Marker marker) {   //marker点击事件
+
+
         //计算2个经纬度之间的距离,精准度更高
         LatLng position = marker.getPosition();
         final String title = marker.getTitle();
@@ -662,7 +676,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
             //表示超出范围200米
         } else if (calculateLineDistance > 200) {
 //            markerOption.s
-            Toast.makeText(this, "距离商家太远,请靠近试试", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "距离商家太远,请靠近试试,", Toast.LENGTH_SHORT).show();
             return false;
             //距离等于0
         } else {
@@ -720,7 +734,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
             buyerBeanArrayList = buyerList;
             mBuyerBean = buyerBeanArrayList.get(0);
         } else {
-            mOkHttpUtil.getBuyerBean();
+            mOkHttpUtil.getBuyerBean(mUserId);
         }
     }
 
