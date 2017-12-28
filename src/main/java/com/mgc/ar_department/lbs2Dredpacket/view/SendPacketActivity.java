@@ -40,13 +40,10 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
     private double mJing;
     private double mWei;
     private Button mSend;
-    private double MIN_MONEY = 0.01;
-    private double MAX_MONEY = 200.00;
     private String mSNum;
     private String mSMoney;
     private Button mLock;
-    private boolean isChanged;
-    private DecimalFormat mDf;
+    private DecimalFormat mDf = new DecimalFormat("0.00");
     private String mFormat;
 
 
@@ -90,9 +87,7 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
     @Override
     public void beforeTextChanged(CharSequence s, int start, int
             count, int after) {
-
     }
-
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -102,19 +97,21 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
 
         //1开头为1,\d{0,2} 数字重复0-2次,.后面数字重复1或0次    0.接数字在再加一个非零数字  0.01
 
-        mDf = new DecimalFormat("0.00"); //
-
+         //
         if (mSMoney.length() != 0) {
-           // Double aDouble = Double.valueOf(mSMoney);
+            // Double aDouble = Double.valueOf(mSMoney);
             Double aMoney = Double.valueOf(mSMoney);
             mFormat = mDf.format(aMoney);
-            LogUtils.error("amoeny="+aMoney+";format="+ mFormat);
+            LogUtils.error("amoeny=" + aMoney + ";format=" + mFormat);
             mTextView.setText(mFormat);
             LogUtils.error("钱不为0");
+
             if (mSNum.length() != 0) {
                 LogUtils.error("数目不为0");
+                double MIN_MONEY = 0.01;
+                double MAX_MONEY = 200.00;
                 if ((aMoney >= MIN_MONEY && aMoney <= MAX_MONEY)         //0-99   |1.00-99.00       |100-199|100.00-199.00  |0.00-0.99  |200
-                        && mSNum.matches("[1-9]\\d?") && mSMoney.matches("\\d{1,2}|\\d{1,2}.\\d{1,2}|1\\d{2}|\\d{3}.\\d{1,2}|0.\\d[1-9]?|2[0][0]")) { //1-99与0<amoney<=200
+                        && mSNum.matches("[1-9]\\d?") && mSMoney.matches("\\d{1,2}|\\d{1,2}.\\d{0,2}|1\\d{2}|\\d{3}.\\d{0,2}|0.\\d[1-9]?|2[0][0]")) { //1-99与0<amoney<=200
                     LogUtils.error("正确");
                     mLock.setVisibility(View.GONE);
                     mSend.setVisibility(View.VISIBLE);
@@ -122,7 +119,7 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
                     LogUtils.error("均不为0,错误");
                     mLock.setVisibility(View.VISIBLE);
                     mSend.setVisibility(View.GONE);
-                   // Toast.makeText(mContext, Constants.max_num, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, Constants.max_num, Toast.LENGTH_SHORT).show();
                 }
             } else {
                 LogUtils.error("数目为0");
@@ -173,7 +170,7 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
         String sWords = mwords.getText().toString();
 
         mBuyerPacketBean.setNum(mSNum);
-        mBuyerPacketBean.setMoney(mSMoney);
+        mBuyerPacketBean.setMoney(mFormat);
         mBuyerPacketBean.setLanguage(sWords);
         mBuyerPacketBean.setLongitude(mJing);
         mBuyerPacketBean.setLatitude(mWei);
@@ -183,10 +180,10 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
         if (activeNetworkInfo != null) {
             Log.e(TAG, "postData: " + mSNum + ";mTextView=" + mFormat + ";word=" + sWords);
             PostToServer.loginByPost(s);
-            LogUtils.error("走了");
+            //发到服务器,返回success,弹出toast提示发出成功,并关闭页面
+            //发送失败,回调fail,toast=fail, 不关闭页面
         } else {
             Toast.makeText(mContext, Constants.net_remind, Toast.LENGTH_SHORT).show();
-
 
         }
     }
