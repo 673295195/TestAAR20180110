@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Sensor;
@@ -18,14 +17,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -72,8 +68,8 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     private Circle circle;
     private RadioGroup mGPSModeGroup;
     private MyLocationStyle myLocationStyle;
-    private double mWei ;
-    private double mJing ;
+    private double mWei;
+    private double mJing;
     private Location mLocation;
     private MarkerOptions markerOption;
     private LatLng latlng = new LatLng(mWei, mJing);
@@ -121,8 +117,8 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStatueBar();
         setContentView(R.layout.location_activity_main);
+        PermissionAndNetUtils.StatusTitleColor(this);
         mContext = this;
         initIntent();
         requestMorePermissions1(); //6.0权限
@@ -135,9 +131,9 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
     }
 
     private void initIntent() {
-        if (getIntent()!=null){
+        if (getIntent() != null) {
             mUserId = getIntent().getIntExtra("id", defaultValue);
-            LogUtils.error("是第"+mUserId+"会员");
+            LogUtils.error("是第" + mUserId + "会员");
         }
     }
 
@@ -214,38 +210,8 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
                         showToAppSettingDialog();
                     }
                 });
-
-
         }
     }
-
-    private void setStatueBar() {  //toolbar
-        Window window = LocationAndPacket.this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        ViewGroup decorViewGroup = (ViewGroup) window.getDecorView();
-        View statusBarView = new View(window.getContext());
-        int statusBarHeight = getStatusBarHeight(window.getContext());
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, statusBarHeight);
-        params.gravity = Gravity.TOP;
-        statusBarView.setLayoutParams(params);
-        //statusBarView.setBackgroundColor(Color.parseColor("#E71442"));
-        //statusBarView.setBackgroundResource(R.drawable.background);
-        decorViewGroup.addView(statusBarView);
-
-
-    }
-
-    private int getStatusBarHeight(Context context) {
-        int statusBarHeight = 0;
-        Resources res = context.getResources();
-        int resourceId = res.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            statusBarHeight = res.getDimensionPixelSize(resourceId);
-        }
-        return statusBarHeight;
-    }
-
     private void initView() {
         mMapView = (MapView) findViewById(map);
         mReturn1 = (TextView) findViewById(R.id.return1); //返回
@@ -254,9 +220,7 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         mRefresh = (Button) findViewById(R.id.red_refresh);//刷新
         mLinBar = (LinearLayout) findViewById(R.id.bar_record); //弹出菜单
         mMenu = (RelativeLayout) findViewById(R.id.menu);
-
     }
-
     private void addRedPacket() {
         // for循环添加marker
         mHashMap = new HashMap<String, Integer>();
@@ -274,7 +238,6 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
             markerOption.position(new LatLng(mLat1, mLon1));
             //markerOptioon.title(name).snippet("剩" + redNum + "个可抢红包");
             markerOption.title(name).snippet("剩" + redNum + "个可抢红包");
-
 
             markerOption.draggable(true);
             markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_packet));
@@ -297,7 +260,6 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
                 markerOption.draggable(true);
                 markerOption.icon(BitmapDescriptorFactory.fromResource(R.drawable.red_packet));
                 marker2 = aMap.addMarker(markerOption);
-
             }
         }*/
         //添加地图上红包的点击事件
@@ -367,8 +329,6 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
         myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色  。
         aMap.getUiSettings().setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示  设置不显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        //myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW);
-
     }
 
     /**
@@ -737,7 +697,6 @@ public class LocationAndPacket extends AppCompatActivity implements AMap.OnMyLoc
             mOkHttpUtil.getBuyerBean(mUserId);
         }
     }
-
 
     public void historyRecord(View view) {
         if (click) {
