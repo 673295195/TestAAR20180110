@@ -1,4 +1,4 @@
-package com.mgc.ar_department.lbs2Dredpacket.bean;
+package com.mgc.ar.lbsredpacket.bean;
 
 import java.io.Serializable;
 import java.util.List;
@@ -45,27 +45,17 @@ public class BuyerBean implements Serializable {
     }
 
     public static class BuyerPacketBean {
+        private String n_shops;//商铺名称
+       /* private String n_envelope;//红包数
+        private String n_amount;//金额*/
+        /*private double n_location;//经纬度
+        private double n_lat;*/
+       private int id;//会员id
         private double longitude;  //经度1
         private double latitude;  //纬度2
         private String money;//红包总大小
         private String num;  //红包数量
         private String language;  //祝福语
-
-        public double getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(double longitude) {
-            this.longitude = longitude;
-        }
-
-        public double getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(double latitude) {
-            this.latitude = latitude;
-        }
 
         public String getMoney() {
             return money;
@@ -81,6 +71,38 @@ public class BuyerBean implements Serializable {
 
         public void setNum(String num) {
             this.num = num;
+        }
+
+        public String getN_shops() {
+            return n_shops;
+        }
+
+        public void setN_shops(String n_shops) {
+            this.n_shops = n_shops;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public void setLongitude(double longitude) {
+            this.longitude = longitude;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(double latitude) {
+            this.latitude = latitude;
         }
 
         public String getLanguage() {

@@ -1,4 +1,4 @@
-package com.mgc.ar_department.lbs2Dredpacket.view;
+package com.mgc.ar.lbsredpacket.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,13 +16,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.test2Dlibrary.R;
-import com.mgc.ar_department.lbs2Dredpacket.bean.BuyerBean;
-import com.mgc.ar_department.lbs2Dredpacket.util.Constants;
-import com.mgc.ar_department.lbs2Dredpacket.util.LogUtils;
-import com.mgc.ar_department.lbs2Dredpacket.util.PermissionAndNetUtils;
-import com.mgc.ar_department.lbs2Dredpacket.util.PostToServer;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.mgc.ar.lbsredpacket.bean.BuyerBean;
+import com.mgc.ar.lbsredpacket.bean.StateBean;
+import com.mgc.ar.lbsredpacket.util.Constants;
+import com.mgc.ar.lbsredpacket.util.LogUtils;
+import com.mgc.ar.lbsredpacket.util.PermissionAndNetUtils;
+import com.smile.okhttpintegration.OkCallback;
+import com.smile.okhttpintegration.OkHttp;
 
+import java.lang.reflect.Type;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static android.R.attr.defaultValue;
 import static com.amap.test2Dlibrary.R.id.num;
@@ -30,13 +39,13 @@ import static com.amap.test2Dlibrary.R.id.num;
 public class SendPacketActivity extends AppCompatActivity implements TextWatcher, View.OnClickListener {
 
     private static final String TAG = "SendPacketActivity";
+    private static final double MONEY = 100;
     private Context mContext;
     private EditText mMoney;
     private TextView mTextView;
     private BuyerBean mBuyerBean;
     private EditText mNum;
     private EditText mwords;
-    private BuyerBean.BuyerPacketBean mBuyerPacketBean = new BuyerBean.BuyerPacketBean();
     private double mJing;
     private double mWei;
     private Button mSend;
@@ -45,6 +54,8 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
     private Button mLock;
     private DecimalFormat mDf = new DecimalFormat("0.00");
     private String mFormat;
+    private int mUserId;
+    private ArrayList<StateBean> stateBean;
 
 
     @Override
@@ -52,10 +63,10 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_packet);
         mContext = this;
+        PermissionAndNetUtils.StatusTitleColor(mContext);
         initView();
         getIntentInfo();
     }
-
 
     private void initView() {
         mMoney = (EditText) findViewById(R.id.editText);
@@ -79,8 +90,9 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
             mBuyerBean = (BuyerBean) getIntent().getSerializableExtra("mBuyerBean");
             mJing = intent.getDoubleExtra("jing", defaultValue);  //
             mWei = intent.getDoubleExtra("wei", defaultValue);
-            //LogUtils.error("buyer="+mBuyerBean.getV_name());
+            mUserId = getIntent().getIntExtra("userId", defaultValue);
             LogUtils.error("jing=" + mJing + ";wei=" + mWei);
+            LogUtils.error("buyerId=" + mBuyerBean.getId());
         }
     }
 
@@ -88,18 +100,16 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
     public void beforeTextChanged(CharSequence s, int start, int
             count, int after) {
     }
+
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
         mSNum = mNum.getText().toString();
         mSMoney = mMoney.getText().toString();
         //String sWords = mwords.getText().toString();
-
         //1开头为1,\d{0,2} 数字重复0-2次,.后面数字重复1或0次    0.接数字在再加一个非零数字  0.01
 
-         //
         if (mSMoney.length() != 0) {
-            // Double aDouble = Double.valueOf(mSMoney);
             Double aMoney = Double.valueOf(mSMoney);
             mFormat = mDf.format(aMoney);
             LogUtils.error("amoeny=" + aMoney + ";format=" + mFormat);
@@ -125,22 +135,17 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
                 LogUtils.error("数目为0");
                 mLock.setVisibility(View.VISIBLE);
                 mSend.setVisibility(View.GONE);
-                // mSend.setBackgroundResource(R.drawable.btn_square_select);
-                // Toast.makeText(mContext, Constants.nonNull, Toast.LENGTH_SHORT).show();
             }
         } else {
             LogUtils.error("钱为0");
-            //mTextView.setText("0.00");
             mLock.setVisibility(View.VISIBLE);
             mSend.setVisibility(View.GONE);
-            // mSend.setBackgroundResource(R.drawable.btn_square_select);
-            // Toast.makeText(mContext, Constants.nonNull, Toast.LENGTH_SHORT).show();
         }
 
     }
 
     @Override
-    public void afterTextChanged(Editable edt) {
+    public void afterTextChanged(Editable edt) {  //000.00
 
         String temp = edt.toString();
         int posDot = temp.indexOf(".");//返回指定字符在此字符串中第一次出现处的索引
@@ -165,21 +170,69 @@ public class SendPacketActivity extends AppCompatActivity implements TextWatcher
     @Override
     public void onClick(View v) {
         //正则判断
-        //String sNum = mNum.getText().toString();
-        // String sMoney = mMoney.getText().toString();
-        String sWords = mwords.getText().toString();
 
-        mBuyerPacketBean.setNum(mSNum);
-        mBuyerPacketBean.setMoney(mFormat);
-        mBuyerPacketBean.setLanguage(sWords);
-        mBuyerPacketBean.setLongitude(mJing);
-        mBuyerPacketBean.setLatitude(mWei);
-        String s = mBuyerPacketBean.toString();
+        Double sendMoney = Double.valueOf(mFormat);
         NetworkInfo activeNetworkInfo = PermissionAndNetUtils.getActiveNetworkInfo(mContext);
+        if (activeNetworkInfo != null) { //用户id,经纬度,大小和个数
 
-        if (activeNetworkInfo != null) {
-            Log.e(TAG, "postData: " + mSNum + ";mTextView=" + mFormat + ";word=" + sWords);
-            PostToServer.loginByPost(s);
+            if (MONEY >= sendMoney) { //余额>=发出的金额
+                String sWords = mwords.getText().toString();
+                Map<String, Object> params = new HashMap<>();
+                params.put("userid", mUserId);
+                params.put("money", mFormat);
+                params.put("num", mSNum);
+                params.put("language", sWords);
+                params.put("longitude", mJing);
+                params.put("latitude", mWei);
+                Log.e(TAG, "红包数目: " + mSNum + ";金额=" + mFormat + ";祝福语=" + sWords);
+
+                String path = Constants.address + "lbsbonustext/portcash.action";
+                OkHttp.post(path, params, new OkCallback() { //上传红包数据
+                    @Override
+                    public void onResponse(String response) {
+                        String json = response.toString();
+
+                        LogUtils.error("json" + json);
+                        Gson gson = new Gson();
+                        stateBean = new ArrayList<StateBean>();
+                        Type type = new TypeToken<List<StateBean>>() {
+                        }.getType();
+                        stateBean = gson.fromJson(json, type);
+                        String state = stateBean.get(0).getState();
+                        LogUtils.error("state" + state);
+                        if (state.equals("1")) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {//状态=1成功
+                                    Toast.makeText(mContext, Constants.success, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            finish();
+                        } else {  //其他失败
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(mContext, Constants.fail, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        LogUtils.error("2" + error.toString());
+                    /*runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mContext, Constants.fail, Toast.LENGTH_SHORT).show();
+                        }
+                    });*/
+                    }
+                });
+            }else {//余额不足
+                Toast.makeText(mContext, Constants.notEnough,Toast.LENGTH_SHORT).show();
+            }
             //发到服务器,返回success,弹出toast提示发出成功,并关闭页面
             //发送失败,回调fail,toast=fail, 不关闭页面
         } else {
