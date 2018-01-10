@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:coupon="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#FCF9F2"
+              android:orientation="vertical">
+
+    <include
+        android:id="@+id/all_loading"
+        layout="@layout/net_request"
+        android:visibility="gone"/>
+    <!--<LinearLayout
+        android:id="@+id/all_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/record_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateDrawable="@drawable/self_progress_drawable"/>
+
+        <TextView
+            android:id="@+id/progress_dialog_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/record_progress"
+            android:text="加载中..."
+            android:textSize="15sp"/>
+
+    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/my_top"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/title_status_red">
+
+            <Button
+                android:id="@+id/my_record"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/title_status_red"
+                android:onClick="myCoupon"
+                android:text="返回"
+                android:textColor="@color/white"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="红包领取记录"
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+        </RelativeLayout>
+
+        <com.mgc.ar.lbsredpacket.util.CouponBgView
+            android:id="@+id/packet_detail"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/my_packet_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            coupon:horizontal_style="circle"
+            coupon:vertical_style="triangle">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/my_packet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="14dp"
+                    android:text="我的现金红包"
+                    android:textColor="@color/send_red_text_color"
+                    android:textSize="24dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="14dp"
+                    android:gravity="end"
+                    android:text="详情"
+                    android:textColor="@color/search_history"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+
+        </com.mgc.ar.lbsredpacket.util.CouponBgView>
+
+        <com.mgc.ar.lbsredpacket.util.CouponBgView
+            android:id="@+id/coupon_detail"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/send_coupon_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            coupon:horizontal_style="circle"
+            coupon:vertical_style="triangle">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <TextView
+
+                    android:id="@+id/my_coupon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="14dp"
+                    android:text="我的优惠券"
+                    android:textColor="@color/send_red_text_color"
+                    android:textSize="24dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="14dp"
+                    android:gravity="end"
+                    android:text="详情"
+                    android:textColor="@color/search_history"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+
+        </com.mgc.ar.lbsredpacket.util.CouponBgView>
+
+        <com.mgc.ar.lbsredpacket.util.CouponBgView
+            android:id="@+id/fragment_detail"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/send_fragment_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            coupon:horizontal_style="circle"
+            coupon:vertical_style="triangle">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <TextView
+                    android:id="@+id/my_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="14dp"
+                    android:text="我的活动碎片"
+                    android:textColor="#2B2B2B"
+                    android:textSize="24dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="14dp"
+                    android:gravity="end"
+                    android:text="详情"
+                    android:textColor="@color/search_history"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
+
+        </com.mgc.ar.lbsredpacket.util.CouponBgView>
+    </LinearLayout>
+
+</LinearLayout>

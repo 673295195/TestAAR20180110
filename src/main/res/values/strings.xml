@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">LBSRedPacket</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="location">正在定位中</string>
+    <string name="layers_demo">Layers图层功能</string>
+    <string name="layers_description">介绍地图分别以正常、卫星模式展示出</string>
+    <string name="left_arrow">\u2190</string>
+    <string name="locationsource_demo">Location小蓝点功能</string>
+    <string name="locationsource_description">介绍对系统定位显示小蓝点功能</string>
+    <string name="locationGPS_demo">gps定位功能</string>
+    <string name="polygon_demo">Polygons功能</string>
+    <string name="polygon_description">介绍在地图绘制多边形</string>
+    <string name="polyline_demo">Polylines功能</string>
+    <string name="polyline_description">介绍在地图中绘制线条</string>
+    <string name="groundoverlay_demo">GroundOverlay功能</string>
+    <string name="circle_demo">Circles功能</string>
+    <string name="circle_description">介绍在地图中绘制圆形</string>
+    <string name="screenshot_description">介绍对地图进行截屏</string>
+    <string name="properties_polyline">设置Polyline属性</string>
+    <string name="properties_polygon">设置Polygon属性</string>
+    <string name="properties_circle">设置Circle属性</string>
+    <string name="error_network">搜索失败,请检查网络连接！</string>
+    <string name="error_key">key验证无效！</string>
+    <string name="error_other">未知错误，请稍后重试!错误码为</string>
+    <string name="no_result">对不起，没有搜索到相关数据！</string>
+    <string name="customlocation_demo">Location小蓝点自定义功能</string>
+    <string name="location_rotatemarker">定位箭头旋转</string>
+    <string name="marker_click">Marker点击回调</string>
+    <string name="infowindow_demo">InfoWindow功能</string>
+    <string name="seller_explain">本店拥有最终解释权</string>
+    <string name="money_limit">每个人发出的红包大小在0.01~200</string>
+    <string name="fragment_word">友情提醒:集齐活动碎片后,点击合成.合成后不要自行点击"店家确认"按钮.请前往卖家店铺,与卖家确认后兑换!!!</string>
+
+
+</resources>

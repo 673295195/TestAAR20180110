@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:coupon="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical|center_horizontal"
+              android:orientation="vertical">
+
+    <include
+        android:visibility="gone"
+        android:id="@+id/all_detail_loading"
+        layout="@layout/net_request"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!-- 关闭按钮框 -->
+        <RelativeLayout
+            android:id="@+id/top_detail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/title_status_red">
+
+            <Button
+                android:id="@+id/close_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                android:background="@color/title_status_red"
+                android:text="关闭"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/name_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="优惠券详情"
+                android:textColor="@color/white"
+                android:textSize="20dp"/>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+
+            <ImageView
+                android:id="@+id/coupon_detailimg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:id="@+id/coupon_detailname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="15dp"
+                android:text="商家"
+                android:textColor="@color/send_red_text_color"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/coupon_detailnumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/coupon_detailname"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text="优惠券"
+                android:textColor="@color/send_red_text_color"
+                android:textSize="26sp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.mgc.ar.lbsredpacket.util.CouponBgView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:background="@color/coupon_background"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                coupon:horizontal_style="circle"
+                coupon:vertical_style="triangle"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/name1_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:text="满32元使用"
+                        android:textColor="@color/title_status_red"
+                        android:textSize="18sp"/>
+
+                    <Button
+                        android:id="@+id/used_detail"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/btn_use_select"
+                        android:text="立即使用"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:visibility="gone"/>
+
+                    <Button
+                        android:id="@+id/use_detail"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/btn_use_selector"
+                        android:text="立即使用"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"/>
+
+                    <LinearLayout
+                        android:id="@+id/textView2_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/use_detail"
+                        android:layout_marginBottom="18dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/deadTime_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="有效期至:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="2017/12/12"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.mgc.ar.lbsredpacket.util.CouponBgView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#E0EEEE"
+                    android:gravity="center"
+                    android:text="@string/seller_explain"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.amap.test2Dlibrary">
+
+    <!-- ========================高德权限开始==================================== -->
+    <!-- 允许程序打开网络套接字 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 允许程序设置内置sd卡的写权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 允许程序获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- 允许程序访问WiFi网络信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 允许程序读写手机状态和身份 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+
+    <!-- =================================高德权限结束=================================== -->
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="8c8363a0f781c68678379de853780203"/> <!--高德key-->
+
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.LBSAndPacketActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.OpenFail"/>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.OpenPacketSuccess"/>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.OpenCouponSuccess"/>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.OpenFragmentSuccess"/>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.RedPacketRecord"/>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.CouponRecord"/>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.FragmentRecord"/>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.MyHistoryRecord"/>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.SendPacketActivity">
+        </activity>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.CouponDetail">
+        </activity>
+        <activity android:name="com.mgc.ar.lbsredpacket.activity.FragmentDetail"/>
+    </application>
+
+</manifest>

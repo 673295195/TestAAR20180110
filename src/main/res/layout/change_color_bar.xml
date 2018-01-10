@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <com.mgc.ar.lbsredpacket.util.SquareImageView
+        android:id="@+id/bar_iv"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/fragment"/>
+
+    <TextView
+        android:id="@+id/bar_num"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="-13dp"
+        android:layout_toRightOf="@+id/bar_iv"
+        android:background="@drawable/btn_round_fragment_red"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="#FFFFFF"
+        />
+</RelativeLayout>
