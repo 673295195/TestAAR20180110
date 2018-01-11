@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    tools:context="com.mgc.ar.lbsredpacket.activity.RedPacketRecord">
+
+    <include
+        android:id="@+id/load_fragment_detail"
+        layout="@layout/net_request"
+        android:visibility="gone"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+
+            android:layout_height="50dp"
+            android:background="@color/title_status_red"
+            >
+
+            <Button
+                android:id="@+id/fragment_detail_close"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/title_status_red"
+                android:onClick="fragmentDetailClose"
+                android:text="返回"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="我收集的碎片"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp">
+
+            <TextView
+                android:id="@+id/fragment_detail_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text="商家"
+                android:textColor="@color/send_red_text_color"
+                android:textSize="24sp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/seller_confirmed"
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/btn_use_selector"
+                        android:onClick="sellerConfirm"
+                        android:rotationX="180"
+                        android:rotationY="180"
+                        android:text="店家确认"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:visibility="gone"
+                        />
+
+                    <Button
+                        android:id="@+id/seller_confirm"
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/btn_use_select"
+                        android:rotationX="180"
+                        android:rotationY="180"
+                        android:text="店家确认"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/fragment_word"
+                android:textColor="@color/colorAccent"
+                android:textStyle="italic"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:background="@drawable/background"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/partrefresh"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/collect"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/btn_round_fragment_red"
+                    android:onClick="buyerConfirm"
+                    android:text="合"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/use_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:text="时间"
+                    android:textColor="@color/title_status_red"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.mgc.ar.lbsredpacket.util.SquareImageView
+                android:id="@+id/button1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/fragment_square_select"
+                android:text="恭"/>
+
+            <com.mgc.ar.lbsredpacket.util.SquareImageView
+                android:id="@+id/button2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/fragment_square_select"
+                android:text="喜"/>
+
+            <com.mgc.ar.lbsredpacket.util.SquareImageView
+                android:id="@+id/button3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/fragment_square_select"
+                android:text="发"/>
+
+            <com.mgc.ar.lbsredpacket.util.SquareImageView
+                android:id="@+id/button4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/fragment_square_select"
+                android:text="财"/>
+
+            <com.mgc.ar.lbsredpacket.util.SquareImageView
+                android:id="@+id/button5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/fragment_square_select"
+                android:text="恭"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

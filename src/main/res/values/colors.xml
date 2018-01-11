@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <!--<color name="yellow">#80FFFF00</color>-->
+    <color name="yellow">#FFDAB9</color>
+    <color name="yellow2">#FFD700</color>
+    <color name="white">#ffffff</color>
+    <color name="holo_red_dark">#ffcc0000</color>
+    <color name="title_status_red">#E71442</color>
+    <color name="send_red_text_color">#1A1A1A</color>
+    <color name="coupon_background">#47BDBD</color>
+    <color name="search_history">#0000ff</color>
+    <color name="title_status_red_tran">#50E71442</color>
+    <!--<color name="white">#FFFFFF</color>-->
+</resources>

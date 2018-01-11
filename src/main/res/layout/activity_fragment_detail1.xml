@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    tools:context="com.mgc.ar.lbsredpacket.activity.RedPacketRecord">
+
+    <include
+        android:id="@+id/load_fragment_detail"
+        layout="@layout/net_request"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+
+            android:layout_height="50dp"
+            android:background="@color/title_status_red"
+            >
+
+            <Button
+                android:id="@+id/fragment_detail_close"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/title_status_red"
+                android:onClick="fragmentDetailClose"
+                android:text="返回"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="我收集的碎片"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp">
+
+            <TextView
+                android:id="@+id/fragment_detail_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text="商家"
+                android:textColor="@color/send_red_text_color"
+                android:textSize="24sp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/seller_confirmed"
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/btn_use_selector"
+                        android:onClick="sellerConfirm"
+                        android:rotationX="180"
+                        android:rotationY="180"
+                        android:text="店家确认"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:visibility="gone"
+                        />
+
+                    <Button
+                        android:id="@+id/seller_confirm"
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/btn_use_select"
+                        android:rotationX="180"
+                        android:rotationY="180"
+                        android:text="店家确认"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/fragment_word"
+                android:textColor="@color/colorAccent"
+                android:textStyle="italic"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:background="@drawable/background"/>
+
+
+            <LinearLayout
+                android:id="@+id/partrefresh"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/collect"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/btn_round_fragment_red"
+                    android:onClick="buyerConfirm"
+                    android:text="合"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/use_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:text="时间"
+                    android:textColor="@color/title_status_red"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--
+                <LinearLayout
+                    android:id="@+id/lin_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ImageView
+
+                        android:id="@+id/button1"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/fragment"
+
+                        android:text="恭"/>
+
+                    <ImageView
+                        android:id="@+id/button2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/fragment"
+                        android:text="喜"/>
+
+                    <ImageView
+                        android:id="@+id/button3"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/fragment"
+                        android:text="发"/>
+
+                    <ImageView
+                        android:id="@+id/button4"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/fragment"
+                        android:text="财"/>
+
+                    <ImageView
+                        android:id="@+id/button5"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/fragment"
+                        android:text="恭"/>
+                </LinearLayout>
+        -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/lin1"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_weight="1">
+
+                <com.mgc.ar.lbsredpacket.util.SquareImageView
+                    android:id="@+id/square1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/fragment"/>
+
+                <TextView
+                    android:id="@+id/round1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_toRightOf="@+id/square1"
+                    android:background="@drawable/btn_round_fragment_yellow"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin2"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_weight="1"
+                >
+
+                <com.mgc.ar.lbsredpacket.util.SquareImageView
+                    android:id="@+id/square2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/fragment"/>
+
+                <TextView
+                    android:id="@+id/round2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_toRightOf="@+id/square2"
+                    android:background="@drawable/btn_round_fragment_yellow"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin3"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_weight="1">
+
+                <com.mgc.ar.lbsredpacket.util.SquareImageView
+                    android:id="@+id/square3"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/fragment"/>
+
+                <TextView
+                    android:id="@+id/round3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_toRightOf="@+id/square3"
+                    android:background="@drawable/btn_round_fragment_yellow"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin4"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_weight="1">
+
+                <com.mgc.ar.lbsredpacket.util.SquareImageView
+                    android:id="@+id/square4"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/fragment"/>
+
+                <TextView
+                    android:id="@+id/round4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_toRightOf="@+id/square4"
+                    android:background="@drawable/btn_round_fragment_yellow"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lin5"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_weight="1">
+
+                <com.mgc.ar.lbsredpacket.util.SquareImageView
+                    android:id="@+id/square5"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/fragment"/>
+
+                <TextView
+                    android:id="@+id/round5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_toRightOf="@+id/square5"
+                    android:background="@drawable/btn_round_fragment_yellow"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
